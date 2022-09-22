@@ -8,8 +8,8 @@ import { isString } from './utils/isString';
 import { postProcessClient } from './utils/postProcessClient';
 import { registerHandlebarTemplates } from './utils/registerHandlebarTemplates';
 import { writeClient } from './utils/writeClient';
+import { writeClientServicesCustomTemplate } from './utils/writeClientServicesCustomTemplate';
 
-export { generateCustom } from './generateCustom';
 export { HttpClient } from './HttpClient';
 export { Indent } from './Indent';
 
@@ -28,6 +28,7 @@ export type Options = {
     postfixServices?: string;
     postfixModels?: string;
     request?: string;
+    serviceTemplate?: string;
     write?: boolean;
 };
 
@@ -66,6 +67,7 @@ export const generate = async ({
     postfixServices = 'Service',
     postfixModels = '',
     request,
+    serviceTemplate,
     write = true,
 }: Options): Promise<void> => {
     const openApi = isString(input) ? await getOpenApiSpec(input) : input;
@@ -76,10 +78,15 @@ export const generate = async ({
         useOptions,
     });
 
+    if (serviceTemplate) {
+        exportServices = false;
+    }
+
+    let clientFinal;
     switch (openApiVersion) {
         case OpenApiVersion.V2: {
             const client = parseV2(openApi);
-            const clientFinal = postProcessClient(client);
+            clientFinal = postProcessClient(client);
             if (!write) break;
             await writeClient(
                 clientFinal,
@@ -103,7 +110,7 @@ export const generate = async ({
 
         case OpenApiVersion.V3: {
             const client = parseV3(openApi);
-            const clientFinal = postProcessClient(client);
+            clientFinal = postProcessClient(client);
             if (!write) break;
             await writeClient(
                 clientFinal,
@@ -124,6 +131,19 @@ export const generate = async ({
             );
             break;
         }
+    }
+
+    if (serviceTemplate) {
+        await writeClientServicesCustomTemplate(
+            clientFinal,
+            output,
+            httpClient,
+            useOptions,
+            useUnionTypes,
+            indent,
+            postfix,
+            serviceTemplate
+        );
     }
 };
 

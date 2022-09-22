@@ -25,6 +25,7 @@ const params = program
     .option('--postfixServices <value>', 'Service name postfix', 'Service')
     .option('--postfixModels <value>', 'Model name postfix')
     .option('--request <value>', 'Path to custom request file')
+    .option('--serviceTemplate <value>', 'Path to custom service handlebars template to generate the service files')
     .parse(process.argv)
     .opts();
 
@@ -46,6 +47,7 @@ if (OpenAPI) {
         postfixServices: params.postfixServices ?? params.postfix,
         postfixModels: params.postfixModels,
         request: params.request,
+        serviceTemplate: params.serviceTemplate,
     })
         .then(() => {
             process.exit(0);

@@ -141,8 +141,9 @@ export const generate = async ({
             useOptions,
             useUnionTypes,
             indent,
-            postfix,
-            serviceTemplate
+            postfixServices,
+            postfixModels,
+            serviceTemplate,
         );
     }
 };

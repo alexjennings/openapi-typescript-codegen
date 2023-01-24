@@ -1,5 +1,5 @@
 import { mkdir, readFile, remove } from 'fs-extra';
-import Handlebars from 'handlebars';
+import HandlebarsRuntime from 'handlebars';
 import { resolve } from 'path';
 
 import { Client } from '../client/interfaces/Client';
@@ -19,8 +19,11 @@ export const writeClientServicesCustomTemplate = async (
     indent: Indent,
     postfixServices: string,
     postfixModels: string,
-    templatePath: string
+    templatePath: string,
+    handlebars?: typeof HandlebarsRuntime
 ) => {
+    const Handlebars = handlebars || HandlebarsRuntime;
+
     registerHandlebarTemplates({
         httpClient,
         useUnionTypes,

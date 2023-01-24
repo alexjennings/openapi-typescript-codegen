@@ -1,3 +1,5 @@
+import HandlebarsRuntime from 'handlebars/runtime';
+
 import { HttpClient } from './HttpClient';
 import { Indent } from './Indent';
 import { parse as parseV2 } from './openApi/v2';
@@ -30,6 +32,7 @@ export type Options = {
     request?: string;
     serviceTemplate?: string;
     write?: boolean;
+    handlebars?: typeof HandlebarsRuntime;
 };
 
 /**
@@ -51,6 +54,7 @@ export type Options = {
  * @param postfixModels Model name postfix
  * @param request Path to custom request file
  * @param write Write the files to disk (true or false)
+ * @param handlebars Handlebars runtime
  */
 export const generate = async ({
     input,
@@ -69,10 +73,12 @@ export const generate = async ({
     request,
     serviceTemplate,
     write = true,
+    handlebars,
 }: Options): Promise<void> => {
     const openApi = isString(input) ? await getOpenApiSpec(input) : input;
     const openApiVersion = getOpenApiVersion(openApi);
     const templates = registerHandlebarTemplates({
+        handlebars,
         httpClient,
         useUnionTypes,
         useOptions,
@@ -144,6 +150,7 @@ export const generate = async ({
             postfixServices,
             postfixModels,
             serviceTemplate,
+            handlebars
         );
     }
 };

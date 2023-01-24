@@ -10,7 +10,6 @@ import { isString } from './utils/isString';
 import { postProcessClient } from './utils/postProcessClient';
 import { registerHandlebarTemplates } from './utils/registerHandlebarTemplates';
 import { writeClient } from './utils/writeClient';
-import { writeClientServicesCustomTemplate } from './utils/writeClientServicesCustomTemplate';
 
 export { HttpClient } from './HttpClient';
 export { Indent } from './Indent';
@@ -30,9 +29,9 @@ export type Options = {
     postfixServices?: string;
     postfixModels?: string;
     request?: string;
-    serviceTemplate?: string;
     write?: boolean;
     handlebars?: typeof HandlebarsRuntime;
+    serviceTemplate?: Handlebars.TemplateDelegate;
 };
 
 /**
@@ -55,6 +54,7 @@ export type Options = {
  * @param request Path to custom request file
  * @param write Write the files to disk (true or false)
  * @param handlebars Handlebars runtime
+ * @param serviceTemplate Service template
  */
 export const generate = async ({
     input,
@@ -71,9 +71,9 @@ export const generate = async ({
     postfixServices = 'Service',
     postfixModels = '',
     request,
-    serviceTemplate,
     write = true,
     handlebars,
+    serviceTemplate,
 }: Options): Promise<void> => {
     const openApi = isString(input) ? await getOpenApiSpec(input) : input;
     const openApiVersion = getOpenApiVersion(openApi);
@@ -82,11 +82,8 @@ export const generate = async ({
         httpClient,
         useUnionTypes,
         useOptions,
+        serviceTemplate,
     });
-
-    if (serviceTemplate) {
-        exportServices = false;
-    }
 
     let clientFinal;
     switch (openApiVersion) {
@@ -137,21 +134,6 @@ export const generate = async ({
             );
             break;
         }
-    }
-
-    if (serviceTemplate) {
-        await writeClientServicesCustomTemplate(
-            clientFinal,
-            output,
-            httpClient,
-            useOptions,
-            useUnionTypes,
-            indent,
-            postfixServices,
-            postfixModels,
-            serviceTemplate,
-            handlebars
-        );
     }
 };
 

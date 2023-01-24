@@ -114,6 +114,7 @@ export const registerHandlebarTemplates = (root: {
     useOptions: boolean;
     useUnionTypes: boolean;
     handlebars?: typeof HandlebarsRuntime;
+    serviceTemplate?: Handlebars.TemplateDelegate;
 }): Templates => {
     const Handlebars = root.handlebars || HandlebarsRuntime;
 
@@ -126,7 +127,7 @@ export const registerHandlebarTemplates = (root: {
         exports: {
             model: Handlebars.template(templateExportModel),
             schema: Handlebars.template(templateExportSchema),
-            service: Handlebars.template(templateExportService),
+            service: Handlebars.template(root.serviceTemplate || templateExportService),
         },
         core: {
             settings: Handlebars.template(templateCoreSettings),

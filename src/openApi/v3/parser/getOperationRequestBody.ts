@@ -27,12 +27,14 @@ export const getOperationRequestBody = (openApi: OpenApi, body: OpenApiRequestBo
         enums: [],
         properties: [],
         mediaType: null,
+        allMediaTypes: null,
     };
 
     if (body.content) {
         const content = getContent(openApi, body.content);
         if (content) {
             requestBody.mediaType = content.mediaType;
+            requestBody.allMediaTypes = content.allMediaTypes;
             switch (requestBody.mediaType) {
                 case 'application/x-www-form-urlencoded':
                 case 'multipart/form-data':

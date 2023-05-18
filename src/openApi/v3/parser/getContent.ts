@@ -6,15 +6,19 @@ import type { OpenApiSchema } from '../interfaces/OpenApiSchema';
 
 export interface Content {
     mediaType: string;
+    allMediaTypes: string[];
     schema: OpenApiSchema;
 }
 
 const BASIC_MEDIA_TYPES = [
     'application/json-patch+json',
     'application/json',
-    'application/x-www-form-urlencoded',
     'text/json',
     'text/plain',
+    'application/xml',
+    'application/javascript',
+    'application/octet-stream',
+    'application/x-www-form-urlencoded',
     'multipart/form-data',
     'multipart/mixed',
     'multipart/related',
@@ -31,6 +35,7 @@ export const getContent = (openApi: OpenApi, content: Dictionary<OpenApiMediaTyp
     if (basicMediaTypeWithSchema) {
         return {
             mediaType: basicMediaTypeWithSchema,
+            allMediaTypes: Object.keys(content),
             schema: content[basicMediaTypeWithSchema].schema as OpenApiSchema,
         };
     }
@@ -39,6 +44,7 @@ export const getContent = (openApi: OpenApi, content: Dictionary<OpenApiMediaTyp
     if (firstMediaTypeWithSchema) {
         return {
             mediaType: firstMediaTypeWithSchema,
+            allMediaTypes: Object.keys(content),
             schema: content[firstMediaTypeWithSchema].schema as OpenApiSchema,
         };
     }

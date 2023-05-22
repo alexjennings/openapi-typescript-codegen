@@ -30,7 +30,7 @@ export const getOperationParameter = (openApi: OpenApi, parameter: OpenApiParame
         enums: [],
         properties: [],
         mediaType: null,
-        allMediaTypes: null,
+        allMediaTypes: [],
     };
 
     if (parameter.$ref) {

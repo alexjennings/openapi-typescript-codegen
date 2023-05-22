@@ -39,6 +39,8 @@ export const getOperationResults = (operationResponses: OperationResponse[]): Op
             enum: [],
             enums: [],
             properties: [],
+            mediaType: null,
+            allMediaTypes: [],
         });
     }
 

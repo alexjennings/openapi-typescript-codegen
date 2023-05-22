@@ -107,4 +107,8 @@ export const registerHandlebarHelpers = (root: {
     Handlebars.registerHelper('camelCase', function (value: string): string {
         return camelCase(value);
     });
+
+    Handlebars.registerHelper('toJSON', function (object): any {
+        return new Handlebars.SafeString(JSON.stringify(object));
+    });
 };

@@ -27,7 +27,7 @@ export const getOperationRequestBody = (openApi: OpenApi, body: OpenApiRequestBo
         enums: [],
         properties: [],
         mediaType: null,
-        allMediaTypes: null,
+        allMediaTypes: [],
     };
 
     if (body.content) {
